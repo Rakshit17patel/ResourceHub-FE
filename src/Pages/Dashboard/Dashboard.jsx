@@ -15,7 +15,7 @@ const Dashboard = () => {
         Dashboard
       </Typography>
 
-      <Box sx={{ marginTop: 2 }}>
+      <Box >
         {organization ? (
           <>
             <Typography variant="body1">Organization Name: {organization.name}</Typography>
@@ -28,7 +28,7 @@ const Dashboard = () => {
         <Typography variant="body1">User ID: {user.id}</Typography>
 
         {/* Buttons to Navigate to Routes */}
-        <Box sx={{ marginTop: 4, display: 'flex', gap: 2 }}>
+        <Box sx={{ inTop: 4, display: 'flex', gap: 2 }}>
           <Button component={Link} to={PAGE_URLS.RESOURCES} variant="contained" color="primary">
             Resources
           </Button>
