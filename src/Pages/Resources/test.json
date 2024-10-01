@@ -1,0 +1,214 @@
+[
+{
+        "ResourceID": 1,
+        "Name": "Amanda Welch",
+        "Rate": 52.21,
+        "Skills": {
+            "Rails": {
+                "level": "beginner"
+            },
+            "WebSockets": {
+                "level": "beginner"
+            },
+            "TensorFlow": {
+                "level": "intermediate"
+            }
+        },
+        "PastJobTitles": {
+            "AI Engineer": {
+                "years": 5.0
+            },
+            "DevOps Engineer": {
+                "years": 3.4
+            },
+            "System Administrator": {
+                "years": 2.2
+            }
+        },
+        "Domain": [
+            "E-commerce"
+        ],
+        "AvailableDate": "2024-11-08",
+        "OrgID": 3
+},
+{
+    "ResourceID": 2,
+    "Name": "John Doe",
+    "Rate": 65.50,
+    "Skills": {
+        "Java": {
+            "level": "expert"
+        },
+        "Angular": {
+            "level": "intermediate"
+        },
+        "Python": {
+            "level": "beginner"
+        }
+    },
+    "PastJobTitles": {
+        "Software Engineer": {
+            "years": 6.0
+        },
+        "Frontend Developer": {
+            "years": 2.5
+        }
+    },
+    "Domain": [
+        "Finance",
+        "Healthcare"
+    ],
+    "AvailableDate": "2024-12-01",
+    "OrgID": 4
+},
+{
+    "ResourceID": 3,
+    "Name": "Jane Smith",
+    "Rate": 75.00,
+    "Skills": {
+        "React": {
+            "level": "expert"
+        },
+        "Node.js": {
+            "level": "intermediate"
+        },
+        "SQL": {
+            "level": "beginner"
+        }
+    },
+    "PastJobTitles": {
+        "Full Stack Developer": {
+            "years": 4.0
+        },
+        "Backend Developer": {
+            "years": 3.0
+        }
+    },
+    "Domain": [
+        "E-commerce",
+        "Technology"
+    ],
+    "AvailableDate": "2025-01-15",
+    "OrgID": 5
+},
+{
+    "ResourceID": 4,
+    "Name": "Michael Brown",
+    "Rate": 60.00,
+    "Skills": {
+        "Docker": {
+            "level": "intermediate"
+        },
+        "Kubernetes": {
+            "level": "beginner"
+        },
+        "AWS": {
+            "level": "expert"
+        }
+    },
+    "PastJobTitles": {
+        "DevOps Engineer": {
+            "years": 5.0
+        },
+        "System Administrator": {
+            "years": 2.0
+        }
+    },
+    "Domain": [
+        "Technology",
+        "Retail"
+    ],
+    "AvailableDate": "2024-11-20",
+    "OrgID": 6
+},
+{
+    "ResourceID": 5,
+    "Name": "Emily Davis",
+    "Rate": 58.75,
+    "Skills": {
+        "JavaScript": {
+            "level": "expert"
+        },
+        "React": {
+            "level": "expert"
+        },
+        "Node.js": {
+            "level": "intermediate"
+        }
+    },
+    "PastJobTitles": {
+        "Frontend Developer": {
+            "years": 4.0
+        },
+        "Full Stack Developer": {
+            "years": 3.0
+        }
+    },
+    "Domain": [
+        "Finance",
+        "Retail"
+    ],
+    "AvailableDate": "2024-11-30",
+    "OrgID": 7
+},
+{
+    "ResourceID": 6,
+    "Name": "Robert Johnson",
+    "Rate": 70.00,
+    "Skills": {
+        "Python": {
+            "level": "expert"
+        },
+        "Django": {
+            "level": "expert"
+        },
+        "Machine Learning": {
+            "level": "intermediate"
+        }
+    },
+    "PastJobTitles": {
+        "Backend Developer": {
+            "years": 5.0
+        },
+        "Data Scientist": {
+            "years": 2.5
+        }
+    },
+    "Domain": [
+        "Healthcare",
+        "Technology"
+    ],
+    "AvailableDate": "2025-01-10",
+    "OrgID": 8
+},
+{
+    "ResourceID": 7,
+    "Name": "Linda Thompson",
+    "Rate": 65.50,
+    "Skills": {
+        "Java": {
+            "level": "expert"
+        },
+        "Spring Boot": {
+            "level": "intermediate"
+        },
+        "Microservices": {
+            "level": "intermediate"
+        }
+    },
+    "PastJobTitles": {
+        "Software Engineer": {
+            "years": 6.0
+        },
+        "Backend Developer": {
+            "years": 3.5
+        }
+    },
+    "Domain": [
+        "E-commerce",
+        "Finance"
+    ],
+    "AvailableDate": "2024-12-20",
+    "OrgID": 9
+}
+]
