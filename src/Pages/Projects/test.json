@@ -1,0 +1,407 @@
+[
+{
+        "ProjectID": 1,
+        "ProjectName": "Smart Healthcare Platform",
+        "OrgID": 2,
+        "RequiredResources": [
+            {
+                "Role": "Financial Analyst",
+                "Skills": {
+                    "Go": {
+                        "level": "beginner"
+                    },
+                    "JavaScript": {
+                        "level": "intermediate"
+                    },
+                    "Spring Boot": {
+                        "level": "beginner"
+                    }
+                },
+                "Quantity": 1
+            },
+            {
+                "Role": "DevOps Engineer",
+                "Skills": {
+                    "C++": {
+                        "level": "intermediate"
+                    },
+                    "Swift": {
+                        "level": "expert"
+                    },
+                    "SQL": {
+                        "level": "beginner"
+                    },
+                    "Solidity": {
+                        "level": "expert"
+                    }
+                },
+                "Quantity": 2
+            },
+            {
+                "Role": "Backend Developer",
+                "Skills": {
+                    "AWS": {
+                        "level": "beginner"
+                    },
+                    "Go": {
+                        "level": "beginner"
+                    },
+                    "NLP": {
+                        "level": "beginner"
+                    }
+                },
+                "Quantity": 2
+            },
+            {
+                "Role": "Blockchain Developer",
+                "Skills": {
+                    "SQL": {
+                        "level": "beginner"
+                    },
+                    "Express": {
+                        "level": "beginner"
+                    }
+                },
+                "Quantity": 1
+            }
+        ],
+        "NumberOfDays": 107,
+        "ProjectStartDate": "2024-10-22",
+        "Technology": [
+            "TensorFlow",
+            "Spring Boot",
+            "AWS"
+        ],
+        "Domain": [
+            "Finance",
+            "Media"
+        ]
+},
+{
+    "ProjectID": 2,
+    "ProjectName": "AI-Powered E-Commerce Platform",
+    "OrgID": 3,
+    "RequiredResources": [
+        {
+            "Role": "Data Scientist",
+            "Skills": {
+                "Python": {
+                    "level": "expert"
+                },
+                "TensorFlow": {
+                    "level": "intermediate"
+                },
+                "R": {
+                    "level": "beginner"
+                }
+            },
+            "Quantity": 3
+        },
+        {
+            "Role": "Frontend Developer",
+            "Skills": {
+                "React": {
+                    "level": "expert"
+                },
+                "CSS": {
+                    "level": "intermediate"
+                },
+                "HTML": {
+                    "level": "expert"
+                },
+                "TypeScript": {
+                    "level": "intermediate"
+                }
+            },
+            "Quantity": 2
+        },
+        {
+            "Role": "Project Manager",
+            "Skills": {
+                "Agile": {
+                    "level": "expert"
+                },
+                "Scrum": {
+                    "level": "intermediate"
+                },
+                "Kanban": {
+                    "level": "intermediate"
+                }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Quality Assurance Engineer",
+            "Skills": {
+                "Selenium": {
+                    "level": "intermediate"
+                },
+                "JUnit": {
+                    "level": "beginner"
+                },
+                "Cucumber": {
+                    "level": "intermediate"
+                }
+            },
+            "Quantity": 2
+        }
+    ],
+    "NumberOfDays": 150,
+    "ProjectStartDate": "2024-11-15",
+    "Technology": [
+        "TensorFlow",
+        "React",
+        "AWS",
+        "Docker"
+    ],
+    "Domain": [
+        "Retail",
+        "Technology"
+    ]
+},
+{
+    "ProjectID": 3,
+    "ProjectName": "Automated Supply Chain Management System",
+    "OrgID": 4,
+    "RequiredResources": [
+        {
+            "Role": "Business Analyst",
+            "Skills": {
+                "SQL": {
+                    "level": "intermediate"
+                },
+                "Excel": {
+                    "level": "expert"
+                },
+                "Tableau": {
+                    "level": "beginner"
+                }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Full Stack Developer",
+            "Skills": {
+                "Java": {
+                    "level": "expert"
+                },
+                "Angular": {
+                    "level": "intermediate"
+                },
+                "Node.js": {
+                    "level": "intermediate"
+                },
+                "Python": {
+                    "level": "beginner"
+                }
+            },
+            "Quantity": 3
+        },
+        {
+            "Role": "Database Administrator",
+            "Skills": {
+                "PostgreSQL": {
+                    "level": "expert"
+                },
+                "MySQL": {
+                    "level": "intermediate"
+                },
+                "MongoDB": {
+                    "level": "beginner"
+                }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Network Engineer",
+            "Skills": {
+                "Cisco": {
+                    "level": "expert"
+                },
+                "Juniper": {
+                    "level": "intermediate"
+                },
+                "Network Security": {
+                    "level": "intermediate"
+                }
+            },
+            "Quantity": 2
+        }
+    ],
+    "NumberOfDays": 200,
+    "ProjectStartDate": "2024-12-01",
+    "Technology": [
+        "Java",
+        "Angular",
+        "Node.js",
+        "PostgreSQL"
+    ],
+    "Domain": [
+        "Logistics",
+        "Manufacturing"
+    ]
+},
+{
+    "ProjectID": 4,
+    "ProjectName": "IoT Smart Home System",
+    "OrgID": 5,
+    "RequiredResources": [
+        {
+            "Role": "Embedded Systems Engineer",
+            "Skills": {
+                "C": { "level": "expert" },
+                "C++": { "level": "expert" },
+                "Python": { "level": "intermediate" }
+            },
+            "Quantity": 2
+        },
+        {
+            "Role": "Mobile Developer",
+            "Skills": {
+                "Java": { "level": "intermediate" },
+                "Kotlin": { "level": "expert" },
+                "React Native": { "level": "beginner" }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Security Analyst",
+            "Skills": {
+                "Cybersecurity": { "level": "expert" },
+                "Penetration Testing": { "level": "intermediate" },
+                "Network Security": { "level": "expert" }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "UI/UX Designer",
+            "Skills": {
+                "Sketch": { "level": "expert" },
+                "Adobe XD": { "level": "intermediate" },
+                "Figma": { "level": "intermediate" }
+            },
+            "Quantity": 1
+        }
+    ],
+    "NumberOfDays": 180,
+    "ProjectStartDate": "2025-01-10",
+    "Technology": [
+        "C",
+        "C++",
+        "Python",
+        "Kotlin"
+    ],
+    "Domain": [
+        "Home Automation",
+        "Security"
+    ]
+},
+{
+    "ProjectID": 5,
+    "ProjectName": "Next-Gen CRM Platform",
+    "OrgID": 6,
+    "RequiredResources": [
+        {
+            "Role": "CRM Specialist",
+            "Skills": {
+                "Salesforce": { "level": "expert" },
+                "HubSpot": { "level": "intermediate" },
+                "Zoho CRM": { "level": "beginner" }
+            },
+            "Quantity": 2
+        },
+        {
+            "Role": "Backend Developer",
+            "Skills": {
+                "Node.js": { "level": "expert" },
+                "Express.js": { "level": "intermediate" },
+                "MongoDB": { "level": "intermediate" }
+            },
+            "Quantity": 2
+        },
+        {
+            "Role": "Frontend Developer",
+            "Skills": {
+                "Vue.js": { "level": "expert" },
+                "HTML": { "level": "expert" },
+                "CSS": { "level": "intermediate" }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "DevOps Engineer",
+            "Skills": {
+                "Docker": { "level": "intermediate" },
+                "Kubernetes": { "level": "beginner" },
+                "AWS": { "level": "intermediate" }
+            },
+            "Quantity": 1
+        }
+    ],
+    "NumberOfDays": 120,
+    "ProjectStartDate": "2025-02-15",
+    "Technology": [
+        "Node.js",
+        "Vue.js",
+        "Docker"
+    ],
+    "Domain": [
+        "Customer Relationship Management",
+        "Sales"
+    ]
+},
+{
+    "ProjectID": 6,
+    "ProjectName": "Autonomous Drone Navigation System",
+    "OrgID": 7,
+    "RequiredResources": [
+        {
+            "Role": "AI Engineer",
+            "Skills": {
+                "Python": { "level": "expert" },
+                "TensorFlow": { "level": "expert" },
+                "PyTorch": { "level": "intermediate" }
+            },
+            "Quantity": 2
+        },
+        {
+            "Role": "Robotics Engineer",
+            "Skills": {
+                "ROS": { "level": "expert" },
+                "C++": { "level": "intermediate" },
+                "MATLAB": { "level": "beginner" }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Aerospace Engineer",
+            "Skills": {
+                "Aerodynamics": { "level": "expert" },
+                "Flight Mechanics": { "level": "intermediate" },
+                "Control Systems": { "level": "beginner" }
+            },
+            "Quantity": 1
+        },
+        {
+            "Role": "Software Tester",
+            "Skills": {
+                "JUnit": { "level": "intermediate" },
+                "Selenium": { "level": "beginner" },
+                "Cucumber": { "level": "beginner" }
+            },
+            "Quantity": 1
+        }
+    ],
+    "NumberOfDays": 210,
+    "ProjectStartDate": "2025-03-01",
+    "Technology": [
+        "Python",
+        "TensorFlow",
+        "ROS"
+    ],
+    "Domain": [
+        "Aerospace",
+        "Robotics"
+    ]
+}
+]
