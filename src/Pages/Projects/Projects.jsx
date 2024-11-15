@@ -1,21 +1,14 @@
-import React, {useEffect,useState} from 'react'
+import React, { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import { Grid, Paper, Typography } from '@mui/material';
 
-import data from "./test.json"
+import axios from 'axios';
 
-const Projects=()=>{
-  // const [data, setData] = useState([]);
-
-  // // ApiLink
-  // useEffect(() => {
-  //   fetch('http://127.0.0.1:8000/projects')
-  //     .then(response => response.json())
-  //     .then(json => setData(json))
-  //     .catch(error => console.error(error));
-  // }, []);
+const Projects = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const columns = [
     { field: 'ProjectID', headerName: 'Project ID', width: 50 },
@@ -25,30 +18,58 @@ const Projects=()=>{
     { field: 'ProjectStartDate', headerName: 'Project Start Date', width: 150 },
     { field: 'Technology', headerName: 'Technology', width: 250 },
     { field: 'Domain', headerName: 'Domain', width: 200 },
-    { field: 'Resources', headerName: 'Resources' }
+    { field: 'Resources', headerName: 'Resources', width: 300 },
   ];
 
   const rows = data.map((project, index) => ({
     id: index,
     ...project,
+    Resources: project.RequiredResources
+      ? project.RequiredResources.map((res) => res.Role).join(', ')
+      : 'N/A',
   }));
 
-  const addRow = () =>{
-    console.log("New Project Added")
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get('http://localhost:5000/Projects');
+        setData(response.data); 
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return(
+    fetchData();
+  }, []);
+
+  const addRow = () => {
+    console.log('New Project Added');
+  };
+
+  return (
     <Paper style={{ padding: 16, marginTop: 16 }}>
       <Typography variant="h6" gutterBottom>
         Project Data
       </Typography>
-      <Grid container >
-        <Button size="small" variant="contained" onClick={addRow} sx={{ marginBottom: '10px'}}>
+      <Grid container>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={addRow}
+          sx={{ marginBottom: '10px' }}
+        >
           Add New Project
         </Button>
         <Grid item xs={12}>
-          <div style={{ height: '100%', width: '100%' }}>
-            <DataGrid rows={rows} columns={columns} pageSize={'auto'} 
+          <div style={{ height: 600, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              loading={loading}
               slotProps={{
                 loadingOverlay: {
                   variant: 'skeleton',
@@ -60,7 +81,7 @@ const Projects=()=>{
         </Grid>
       </Grid>
     </Paper>
-  )
-}
+  );
+};
 
 export default Projects;

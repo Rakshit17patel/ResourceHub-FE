@@ -1,4 +1,4 @@
-[
+{"Resources" :[
 {
         "ResourceID": 1,
         "Name": "Amanda Welch",
@@ -211,4 +211,4 @@
     "AvailableDate": "2024-12-20",
     "OrgID": 9
 }
-]
+]}
