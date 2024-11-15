@@ -15,10 +15,10 @@ const SignUpPage = () => {
       }}
     >
     <SignUp
-      path={PAGE_URLS.SIGN_UP}           // Sign-up URL
-      routing="path"                     // Ensure the routing method is correct
-      signInUrl={PAGE_URLS.SIGN_IN}      // Link to the Sign In page
-      redirectUrl={PAGE_URLS.DASHBOARD}  // Redirect after successful sign-up
+      path={PAGE_URLS.SIGN_UP}
+      routing="path"                     
+      signInUrl={PAGE_URLS.SIGN_IN}      
+      redirectUrl={PAGE_URLS.DASHBOARD}  
    />
    </Box>
   );

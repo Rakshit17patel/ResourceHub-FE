@@ -10,6 +10,10 @@ const Footer = () => {
         padding: '20px 0',
         textAlign: 'center',
         borderTop: '1px solid #e0e0e0',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
       }}
     >
       <Typography variant="body2" sx={{ color: '#333' }}>

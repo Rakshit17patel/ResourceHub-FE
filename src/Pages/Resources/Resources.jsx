@@ -1,21 +1,28 @@
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import { Grid, Paper, Typography } from '@mui/material';
 
-import data from "./test.json"
+const Resources = () => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const Resources = ()=> {
-  // const [data, setData] = useState([]);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:5000/Resources');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // // ApiLink
-  // useEffect(() => {
-  //   fetch('http://127.0.0.1:8000/resources')
-  //     .then(response => response.json())
-  //     .then(json => setData(json))
-  //     .catch(error => console.error(error));
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const columns = [
     { field: 'ResourceID', headerName: 'ID', width: 90 },
@@ -33,7 +40,7 @@ const Resources = ()=> {
             </div>
           ))}
         </div>
-      )
+      ),
     },
     {
       field: 'PastJobTitles',
@@ -47,17 +54,15 @@ const Resources = ()=> {
             </div>
           ))}
         </div>
-      )
+      ),
     },
     {
       field: 'Domain',
       headerName: 'Domain',
       width: 200,
       renderCell: (params) => (
-        <div>
-          {params.value.join(', ')}
-        </div>
-      )
+        <div>{params.value.join(', ')}</div>
+      ),
     },
     { field: 'AvailableDate', headerName: 'Available Date', width: 150 },
     { field: 'OrgID', headerName: 'Org ID', width: 100 },
@@ -69,32 +74,42 @@ const Resources = ()=> {
   }));
 
   const addRow = () => {
-    console.log("New Resource Added")
-  }
+    console.log('New Resource Added');
+  };
 
   return (
     <Paper style={{ padding: 16, marginTop: 16 }}>
       <Typography variant="h6" gutterBottom>
         Resource Data
       </Typography>
-      <Grid container >
-        <Button size="small" variant="contained" onClick={addRow} sx={{ marginBottom: '10px' }}>
+      <Grid container>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={addRow}
+          sx={{ marginBottom: '10px' }}
+        >
           Add New Resource
         </Button>
         <Grid item xs={12}>
           <div style={{ height: '100%', width: '100%' }}>
-            <DataGrid rows={rows} columns={columns} pageSize={'auto'}
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={'auto'}
+              loading={loading}
               slotProps={{
                 loadingOverlay: {
                   variant: 'skeleton',
                   noRowsVariant: 'skeleton',
                 },
-              }} />
+              }}
+            />
           </div>
         </Grid>
       </Grid>
     </Paper>
-  )
-}
+  );
+};
 
 export default Resources;
