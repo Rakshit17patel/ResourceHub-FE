@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import { DataGrid } from '@mui/x-data-grid';
-import { Grid, Paper, Typography } from '@mui/material';
+import { Grid, Paper, Typography, Popover, List, ListItem, ListItemText } from '@mui/material';
+
 
 const Resources = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [popoverContent, setPopoverContent] = useState({});
+  const [contentType, setContentType] = useState('');
 
   const fetchData = async () => {
     try {
@@ -24,38 +29,22 @@ const Resources = () => {
     fetchData();
   }, []);
 
+  const handlePopoverOpen = (event, content, type) => {
+    setAnchorEl(event.currentTarget);
+    setPopoverContent(content);
+    setContentType(type); // Set the type of content to display (Skills or Past Job Titles)
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   const columns = [
     { field: 'ResourceID', headerName: 'ID', width: 90 },
     { field: 'Name', headerName: 'Name', width: 150 },
     { field: 'Rate', headerName: 'Rate', width: 130 },
-    {
-      field: 'Skills',
-      headerName: 'Skills',
-      width: 300,
-      renderCell: (params) => (
-        <div>
-          {Object.entries(params.value).map(([skill, { level }]) => (
-            <div key={skill}>
-              {skill}: {level}
-            </div>
-          ))}
-        </div>
-      ),
-    },
-    {
-      field: 'PastJobTitles',
-      headerName: 'Past Job Titles',
-      width: 300,
-      renderCell: (params) => (
-        <div>
-          {Object.entries(params.value).map(([title, { years }]) => (
-            <div key={title}>
-              {title}: {years} years
-            </div>
-          ))}
-        </div>
-      ),
-    },
     {
       field: 'Domain',
       headerName: 'Domain',
@@ -65,7 +54,30 @@ const Resources = () => {
       ),
     },
     { field: 'AvailableDate', headerName: 'Available Date', width: 150 },
-    { field: 'OrgID', headerName: 'Org ID', width: 100 },
+    {
+      field: 'Details',
+      headerName: 'Details',
+      width: 240,
+      renderCell: (params) => (
+        <div>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={(event) => handlePopoverOpen(event, params.row.Skills, 'Skills')}
+            style={{ marginRight: '8px' }}
+          >
+            Skills
+          </Button>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={(event) => handlePopoverOpen(event, params.row.PastJobTitles, 'Past Job Titles')}
+          >
+            Past Job Titles
+          </Button>
+        </div>
+      ),
+    }
   ];
 
   const rows = data.map((project, index) => ({
@@ -108,8 +120,52 @@ const Resources = () => {
           </div>
         </Grid>
       </Grid>
+
+      {/* Popover for More Details */}
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <Paper style={{ padding: '16px', maxWidth: '300px' }}>
+          <List dense>
+            {contentType === 'Skills' && popoverContent && 
+              Object.entries(popoverContent).map(([skill, { level }]) => (
+                <ListItem key={skill} disableGutters>
+                  <ListItemText
+                    primary={<strong>{skill}</strong>}
+                    secondary={`Level: ${level}`}
+                    primaryTypographyProps={{ variant: 'subtitle1' }}
+                    secondaryTypographyProps={{ color: 'textSecondary' }}
+                  />
+                </ListItem>
+              ))}
+            {contentType === 'Past Job Titles' && popoverContent &&
+              Object.entries(popoverContent).map(([title, { years }]) => (
+                <ListItem key={title} disableGutters>
+                  <ListItemText
+                    primary={<strong>{title}</strong>}
+                    secondary={`Experience: ${years} years`}
+                    primaryTypographyProps={{ variant: 'subtitle1' }}
+                    secondaryTypographyProps={{ color: 'textSecondary' }}
+                  />
+                </ListItem>
+              ))}
+          </List>
+        </Paper>
+      </Popover>
     </Paper>
   );
 };
+
+
 
 export default Resources;
