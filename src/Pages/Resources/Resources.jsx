@@ -9,9 +9,10 @@ import { Grid, Paper, Typography, Popover, List, ListItem, ListItemText } from '
 const Resources = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
   const [anchorEl, setAnchorEl] = useState(null);
-  const [popoverContent, setPopoverContent] = useState({});
-  const [contentType, setContentType] = useState('');
+  const [popoverContent, setPopoverContent] = useState([]);
+  const [contentType, setContentType] = useState(''); // New state to track the type of content (Skills or Past Job Titles)
 
   const fetchData = async () => {
     try {
@@ -80,7 +81,50 @@ const Resources = () => {
     }
   ];
 
-  const rows = data.map((project, index) => ({
+// Helper function to extract all searchable data from a row
+const flattenRowData = (row) => {
+  let flatData = '';
+
+  // Include top-level fields
+  flatData += Object.values(row)
+    .filter((value) => typeof value === 'string' || typeof value === 'number')
+    .join(' ')
+    .toLowerCase();
+
+  // Include Skills
+  if (row.Skills) {
+    flatData += ' ' + Object.entries(row.Skills)
+      .map(([skill, details]) => `${skill} ${details.level}`)
+      .join(' ')
+      .toLowerCase();
+  }
+
+  // Include Past Job Titles
+  if (row.PastJobTitles) {
+    flatData += ' ' + Object.entries(row.PastJobTitles)
+      .map(([title, details]) => `${title} ${details.years}`)
+      .join(' ')
+      .toLowerCase();
+  }
+
+  // Include Domain
+  if (row.Domain && Array.isArray(row.Domain)) {
+    flatData += ' ' + row.Domain.join(' ').toLowerCase();
+  }
+
+  return flatData;
+};
+
+// Filtered rows based on the search query
+const filteredRows = data
+  .filter((row) => {
+    const rowData = flattenRowData(row); // Flatten the row data into a single string
+    return searchQuery
+      .toLowerCase()
+      .split(' ')
+      .every((word) => rowData.includes(word)); // Match every word in the query
+  })
+  .map((project, index) => ({
     id: index,
     ...project,
   }));
@@ -94,31 +138,43 @@ const Resources = () => {
       <Typography variant="h6" gutterBottom>
         Resource Data
       </Typography>
-      <Grid container>
-        <Button
-          size="small"
-          variant="contained"
-          onClick={addRow}
-          sx={{ marginBottom: '10px' }}
-        >
-          Add New Resource
-        </Button>
-        <Grid item xs={12}>
-          <div style={{ height: '100%', width: '100%' }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={'auto'}
-              loading={loading}
-              slotProps={{
-                loadingOverlay: {
-                  variant: 'skeleton',
-                  noRowsVariant: 'skeleton',
-                },
-              }}
-            />
-          </div>
+      <Grid container spacing={2} alignItems="center">
+        <Grid item xs={6}>
+          <TextField
+            label="Search"
+            variant="outlined"
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by name, domain, skills, etc."
+          />
         </Grid>
+        <Grid item xs={6} style={{ textAlign: 'right' }}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={addRow}
+            sx={{ marginBottom: '10px' }}
+          >
+            Add New Resource
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid item xs={12} style={{ marginTop: '16px' }}>
+        <div style={{ height: '100%', width: '100%' }}>
+          <DataGrid
+            rows={filteredRows} // Display filtered rows based on the search query
+            columns={columns}
+            pageSize={'auto'}
+            loading={loading}
+            slotProps={{
+              loadingOverlay: {
+                variant: 'skeleton',
+                noRowsVariant: 'skeleton',
+              },
+            }}
+          />
+        </div>
       </Grid>
 
       {/* Popover for More Details */}
