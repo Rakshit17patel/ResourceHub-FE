@@ -12,7 +12,8 @@ const Resources = () => {
   const [searchQuery, setSearchQuery] = useState(''); // State to hold the search query
   const [anchorEl, setAnchorEl] = useState(null);
   const [popoverContent, setPopoverContent] = useState([]);
-  const [contentType, setContentType] = useState(''); // New state to track the type of content (Skills or Past Job Titles)
+  const [contentType, setContentType] = useState('');
+  const [availableDateFilter, setAvailableDateFilter] = useState('');
 
   const fetchData = async () => {
     try {
@@ -93,18 +94,22 @@ const flattenRowData = (row) => {
 
   // Include Skills
   if (row.Skills) {
-    flatData += ' ' + Object.entries(row.Skills)
-      .map(([skill, details]) => `${skill} ${details.level}`)
-      .join(' ')
-      .toLowerCase();
+    flatData +=
+      ' ' +
+      Object.entries(row.Skills)
+        .map(([skill, details]) => `${skill} ${details.level}`)
+        .join(' ')
+        .toLowerCase();
   }
 
   // Include Past Job Titles
   if (row.PastJobTitles) {
-    flatData += ' ' + Object.entries(row.PastJobTitles)
-      .map(([title, details]) => `${title} ${details.years}`)
-      .join(' ')
-      .toLowerCase();
+    flatData +=
+      ' ' +
+      Object.entries(row.PastJobTitles)
+        .map(([title, details]) => `${title} ${details.years}`)
+        .join(' ')
+        .toLowerCase();
   }
 
   // Include Domain
@@ -115,14 +120,21 @@ const flattenRowData = (row) => {
   return flatData;
 };
 
-// Filtered rows based on the search query
+// Filtered rows based on the search query and date filter
 const filteredRows = data
   .filter((row) => {
-    const rowData = flattenRowData(row); // Flatten the row data into a single string
-    return searchQuery
+    const rowData = flattenRowData(row);
+    const matchesSearch = searchQuery
       .toLowerCase()
       .split(' ')
-      .every((word) => rowData.includes(word)); // Match every word in the query
+      .every((word) => rowData.includes(word));
+
+    let matchesDate = true;
+    if (availableDateFilter) {
+      matchesDate = row.AvailableDate >= availableDateFilter;
+    }
+
+    return matchesSearch && matchesDate;
   })
   .map((project, index) => ({
     id: index,
@@ -139,7 +151,7 @@ const filteredRows = data
         Resource Data
       </Typography>
       <Grid container spacing={2} alignItems="center">
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <TextField
             label="Search"
             variant="outlined"
@@ -149,7 +161,20 @@ const filteredRows = data
             placeholder="Search by name, domain, skills, etc."
           />
         </Grid>
-        <Grid item xs={6} style={{ textAlign: 'right' }}>
+        <Grid item xs={4}>
+          <TextField
+            label="Available Date From"
+            type="date"
+            variant="outlined"
+            fullWidth
+            value={availableDateFilter}
+            onChange={(e) => setAvailableDateFilter(e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </Grid>
+        <Grid item xs={4} style={{ textAlign: 'right' }}>
           <Button
             size="small"
             variant="contained"
@@ -163,7 +188,7 @@ const filteredRows = data
       <Grid item xs={12} style={{ marginTop: '16px' }}>
         <div style={{ height: '100%', width: '100%' }}>
           <DataGrid
-            rows={filteredRows} // Display filtered rows based on the search query
+            rows={filteredRows}
             columns={columns}
             pageSize={'auto'}
             loading={loading}
@@ -193,7 +218,8 @@ const filteredRows = data
       >
         <Paper style={{ padding: '16px', maxWidth: '300px' }}>
           <List dense>
-            {contentType === 'Skills' && popoverContent && 
+            {contentType === 'Skills' &&
+              popoverContent &&
               Object.entries(popoverContent).map(([skill, { level }]) => (
                 <ListItem key={skill} disableGutters>
                   <ListItemText
@@ -204,7 +230,8 @@ const filteredRows = data
                   />
                 </ListItem>
               ))}
-            {contentType === 'Past Job Titles' && popoverContent &&
+            {contentType === 'Past Job Titles' &&
+              popoverContent &&
               Object.entries(popoverContent).map(([title, { years }]) => (
                 <ListItem key={title} disableGutters>
                   <ListItemText
