@@ -26,6 +26,10 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import GroupIcon from '@mui/icons-material/Group';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import { PAGE_URLS } from '../../Router';
+import { Link } from 'react-router-dom';
+
+
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -152,51 +156,59 @@ const Dashboard = () => {
             <Card elevation={3} sx={{ borderRadius: 4, p: 4, mb: 4 }}>
               <Grid container spacing={4}>
                 {/* Quick Actions */}
-                <Grid item xs={12}>
-                  <Box>
-                    <Typography variant="h6" gutterBottom>
-                      Quick Actions
-                    </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6} md={3}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<GroupIcon />}
-                        >
-                          Resources
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<AssignmentIcon />}
-                        >
-                          Projects
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<BarChartIcon />}
-                        >
-                          Teams
-                        </Button>
-                      </Grid>
-                      <Grid item xs={6} md={3}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          startIcon={<TrendingUpIcon />}
-                        >
-                          Analytics
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
+                  <Grid item xs={12}>
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            Quick Actions
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<GroupIcon />}
+                component={Link}
+                to={PAGE_URLS.RESOURCES} // Navigate to Resources
+              >
+                Resources
+              </Button>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<AssignmentIcon />}
+                component={Link}
+                to={PAGE_URLS.PROJECTS} // Navigate to Projects
+              >
+                Projects
+              </Button>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<BarChartIcon />}
+                component={Link}
+                to={PAGE_URLS.TEAMS} // Navigate to Teams
+              >
+                Teams
+              </Button>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Button
+                variant="contained"
+                fullWidth
+                startIcon={<TrendingUpIcon />}
+                component={Link}
+                to={PAGE_URLS.ANALYTICS} // Navigate to Analytics
+              >
+                Analytics
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Grid>
 
                 {/* Performance Analytics and Latest Projects */}
                 <Grid item xs={12} md={6}>
