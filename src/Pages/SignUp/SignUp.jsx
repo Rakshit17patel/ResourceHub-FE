@@ -12,6 +12,7 @@ const SignUpPage = () => {
         justifyContent: 'center',
         alignItems: 'center', 
         backgroundColor: '#f5f5f5',
+        height: '100vh',  
       }}
     >
     <SignUp
