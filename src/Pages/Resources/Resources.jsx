@@ -14,10 +14,6 @@ import {
   ListItem,
   ListItemText,
   Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
 } from "@mui/material";
 import resourcesAPI from "../../api/resources";
 import { useOrganization } from "@clerk/clerk-react";
@@ -41,17 +37,6 @@ const Resources = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [popoverContent, setPopoverContent] = useState([]);
   const [contentType, setContentType] = useState("");
-
-  // Modal States for Adding New Resource
-  const [openModal, setOpenModal] = useState(false);
-  const [newResource, setNewResource] = useState({
-    Name: "",
-    Rate: "",
-    Domain: [],
-    AvailableDate: "",
-    Skills: {},
-    PastJobTitles: {},
-  });
 
   // Media Query for Responsive Design
   const isSmallScreen = useMediaQuery("(max-width:768px)");
@@ -108,63 +93,21 @@ const Resources = () => {
 
   const open = Boolean(anchorEl);
 
-  // Handle Modal Open
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  // Handle Modal Close
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setNewResource({
-      Name: "",
-      Rate: "",
-      Domain: [],
-      AvailableDate: "",
-      Skills: {},
-      PastJobTitles: {},
-    });
-  };
-
-  // Handle Form Input Change
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewResource((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Handle Form Submission
-  const handleFormSubmit = async () => {
-    try {
-      setLoading(true);
-      const addedResource = await resourcesAPI.addResource(newResource);
-      setData((prevData) => [...prevData, addedResource]);
-      handleCloseModal();
-    } catch (err) {
-      console.error("Error adding resource:", err);
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Define Columns for DataGrid
   const columns = [
-    { 
-      field: "ResourceID", 
-      headerName: "ID", 
-      width: 90, 
+    {
+      field: "ResourceID",
+      headerName: "ID",
+      width: 90,
       align: "center",
       headerAlign: "center",
     },
-    { 
-      field: "Name", 
-      headerName: "Name", 
-      width: 200, 
-      flex: 1, 
-      wrap: true, 
+    {
+      field: "Name",
+      headerName: "Name",
+      width: 200,
+      flex: 1,
+      wrap: true,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -182,10 +125,10 @@ const Resources = () => {
         </Box>
       ),
     },
-    { 
-      field: "Rate", 
-      headerName: "Rate", 
-      width: 180, 
+    {
+      field: "Rate",
+      headerName: "Rate",
+      width: 180,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -225,10 +168,10 @@ const Resources = () => {
         </Box>
       ),
     },
-    { 
-      field: "AvailableDate", 
-      headerName: "Available Date", 
-      width: 200, 
+    {
+      field: "AvailableDate",
+      headerName: "Available Date",
+      width: 200,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -404,7 +347,6 @@ const Resources = () => {
           <Button
             size="medium"
             variant="contained"
-            onClick={handleOpenModal}
             sx={{ marginBottom: "10px" }}
             aria-label="Add New Resource"
           >
@@ -415,7 +357,7 @@ const Resources = () => {
 
       {/* Display loading indicator */}
       {loading && (
-        <Typography variant="h6" align="center" style={{ marginTop: '20px' }}>
+        <Typography variant="h6" align="center" style={{ marginTop: "20px" }}>
           Loading resources...
         </Typography>
       )}
@@ -475,54 +417,6 @@ const Resources = () => {
         </Box>
       </Box>
 
-      {/* Add Resource Modal */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>Add New Resource</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Name"
-            name="Name"
-            fullWidth
-            variant="outlined"
-            value={newResource.Name}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            label="Rate"
-            name="Rate"
-            type="number"
-            fullWidth
-            variant="outlined"
-            value={newResource.Rate}
-            onChange={handleInputChange}
-          />
-          <TextField
-            margin="dense"
-            label="Available Date"
-            name="AvailableDate"
-            type="date"
-            fullWidth
-            variant="outlined"
-            value={newResource.AvailableDate}
-            onChange={handleInputChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          {/* Add more fields as necessary, such as Domain, Skills, Past Job Titles */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleFormSubmit} color="primary">
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-
       {/* Popover for More Details */}
       <Popover
         open={open}
@@ -546,8 +440,14 @@ const Resources = () => {
                   <ListItemText
                     primary={<strong>{skill}</strong>}
                     secondary={`Level: ${level}`}
-                    primaryTypographyProps={{ variant: "subtitle1", align: "center" }}
-                    secondaryTypographyProps={{ color: "textSecondary", align: "center" }}
+                    primaryTypographyProps={{
+                      variant: "subtitle1",
+                      align: "center",
+                    }}
+                    secondaryTypographyProps={{
+                      color: "textSecondary",
+                      align: "center",
+                    }}
                   />
                 </ListItem>
               ))}
@@ -558,8 +458,14 @@ const Resources = () => {
                   <ListItemText
                     primary={<strong>{title}</strong>}
                     secondary={`Experience: ${years} years`}
-                    primaryTypographyProps={{ variant: "subtitle1", align: "center" }}
-                    secondaryTypographyProps={{ color: "textSecondary", align: "center" }}
+                    primaryTypographyProps={{
+                      variant: "subtitle1",
+                      align: "center",
+                    }}
+                    secondaryTypographyProps={{
+                      color: "textSecondary",
+                      align: "center",
+                    }}
                   />
                 </ListItem>
               ))}
