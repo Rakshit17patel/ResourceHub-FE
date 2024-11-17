@@ -1,8 +1,7 @@
-// src/components/Resources.js
+// src/components/Resources.jsx
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import axios from "axios";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { DataGrid } from "@mui/x-data-grid";
@@ -16,52 +15,92 @@ import {
   ListItemText,
   Box,
 } from "@mui/material";
+import resourcesAPI from "../../api/resources";
+import { useOrganization } from "@clerk/clerk-react";
+import debounce from "lodash.debounce"; // For debouncing search input
 
 const Resources = () => {
+  // Retrieve organization information from Clerk
+  const { organization } = useOrganization();
+  const orgID = organization?.id; // Use optional chaining to avoid errors if organization is undefined
+
+  // Data States
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState(""); // State to hold the search query
+  const [error, setError] = useState(null);
+
+  // Search and Filter States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [availableDateFilter, setAvailableDateFilter] = useState("");
+
+  // Popover States
   const [anchorEl, setAnchorEl] = useState(null);
   const [popoverContent, setPopoverContent] = useState([]);
   const [contentType, setContentType] = useState("");
-  const [availableDateFilter, setAvailableDateFilter] = useState("");
 
+  // Media Query for Responsive Design
   const isSmallScreen = useMediaQuery("(max-width:768px)");
 
-  const fetchData = async () => {
+  // Debounced Search Handler
+  const debouncedSetSearchQuery = useMemo(
+    () => debounce((value) => setSearchQuery(value), 300),
+    []
+  );
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSetSearchQuery.cancel();
+    };
+  }, [debouncedSetSearchQuery]);
+
+  // Fetch resources from the API
+  const fetchResources = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:4000/Resources");
-      setData(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+      setError(null); // Reset previous errors
+      const resources = await resourcesAPI.getResources(orgID);
+      setData(resources);
+    } catch (err) {
+      console.error("Error fetching resources:", err);
+      setError(err);
     } finally {
       setLoading(false);
     }
   };
 
+  // useEffect to fetch data on component mount and when orgId changes
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (orgID) {
+      fetchResources();
+    } else {
+      setLoading(false); // Stop loading if orgId is not available
+      setError(new Error("Organization ID not found."));
+    }
+  }, [orgID]);
 
+  // Handle Popover Open
   const handlePopoverOpen = (event, content, type) => {
     setAnchorEl(event.currentTarget);
     setPopoverContent(content);
     setContentType(type); // Set the type of content to display (Skills or Past Job Titles)
   };
 
+  // Handle Popover Close
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
 
+  // Define Columns for DataGrid
   const columns = [
     {
       field: "ResourceID",
       headerName: "ID",
       width: 90,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
     },
     {
       field: "Name",
@@ -69,7 +108,8 @@ const Resources = () => {
       width: 200,
       flex: 1,
       wrap: true,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
@@ -89,7 +129,8 @@ const Resources = () => {
       field: "Rate",
       headerName: "Rate",
       width: 180,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
@@ -110,7 +151,8 @@ const Resources = () => {
       headerName: "Domain",
       width: 290,
       flex: 1,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
@@ -130,7 +172,8 @@ const Resources = () => {
       field: "AvailableDate",
       headerName: "Available Date",
       width: 200,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
@@ -151,7 +194,8 @@ const Resources = () => {
       headerName: "Details",
       width: 240,
       flex: 1,
-      align: "center", // Centers cell content horizontally
+      align: "center",
+      headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
@@ -230,58 +274,60 @@ const Resources = () => {
     return flatData;
   };
 
-  // Filtered rows based on the search query and date filter
-  const filteredRows = data
-    .filter((row) => {
-      const rowData = flattenRowData(row);
-      const matchesSearch = searchQuery
-        .toLowerCase()
-        .split(" ")
-        .every((word) => rowData.includes(word));
+  // Memoize filteredRows for performance optimization
+  const filteredRows = useMemo(() => {
+    return (data || [])
+      .filter((row) => {
+        const rowData = flattenRowData(row);
+        const matchesSearch = searchQuery
+          .toLowerCase()
+          .split(" ")
+          .every((word) => rowData.includes(word));
 
-      let matchesDate = true;
-      if (availableDateFilter) {
-        matchesDate = row.AvailableDate >= availableDateFilter;
-      }
+        let matchesDate = true;
+        if (availableDateFilter) {
+          // Assuming AvailableDate is in YYYY-MM-DD format
+          matchesDate = row.AvailableDate >= availableDateFilter;
+        }
 
-      return matchesSearch && matchesDate;
-    })
-    .map((resource) => ({
-      id: resource.ResourceID, // Use ResourceID as the unique identifier
-      ...resource,
-    }));
+        return matchesSearch && matchesDate;
+      })
+      .map((resource) => ({
+        id: resource.ResourceID, // Use ResourceID as the unique identifier for DataGrid
+        ...resource,
+      }));
+  }, [data, searchQuery, availableDateFilter]);
 
   console.log(filteredRows);
-
-  const addRow = () => {
-    console.log("New Resource Added");
-    // Implement the logic to add a new resource
-  };
 
   return (
     <Paper
       style={{
         padding: 16,
-        marginTop: 20,
+        marginTop: 40, // Increased top margin for better spacing
         marginBottom: 20,
         maxWidth: isSmallScreen ? "95%" : "90%",
-        margin: "0 auto",
+        marginLeft: "auto",
+        marginRight: "auto",
       }}
+      elevation={3} // Adds a subtle shadow for depth
     >
       <Typography variant="h6" gutterBottom align="center">
         Resource Data
       </Typography>
       <Grid container spacing={2} alignItems="center">
+        {/* Search Filter */}
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             label="Search"
             variant="outlined"
             fullWidth
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => debouncedSetSearchQuery(e.target.value)}
             placeholder="Search by name, domain, skills, etc."
           />
         </Grid>
+
+        {/* Date Filter */}
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             label="Available Date From"
@@ -295,11 +341,12 @@ const Resources = () => {
             }}
           />
         </Grid>
-        <Grid item xs={20} sm={20} md={4} style={{ textAlign: "center" }}>
+
+        {/* ew Resource Button */}
+        <Grid item xs={12} sm={12} md={4} style={{ textAlign: "center" }}>
           <Button
             size="medium"
             variant="contained"
-            onClick={addRow}
             sx={{ marginBottom: "10px" }}
             aria-label="Add New Resource"
           >
@@ -307,31 +354,67 @@ const Resources = () => {
           </Button>
         </Grid>
       </Grid>
-      <Box mt={4} mb={8}>
-        <DataGrid
-          rows={filteredRows}
-          columns={columns}
-          loading={loading}
-          disableColumnMenu
-          autoHeight
-          pageSize={10}
-          rowsPerPageOptions={[10, 20, 50]}
-          sx={{
-            "& .MuiDataGrid-cell": {
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              whiteSpace: "normal",
-              wordBreak: "break-word",
-              lineHeight: "1.5",
-              maxHeight: "none !important",
-            },
-            // Ensure the virtual scroller doesn't restrict overflow
-            "& .MuiDataGrid-virtualScroller": {
-              overflow: "auto",
-            },
-          }}
-        />
+
+      {/* Display loading indicator */}
+      {loading && (
+        <Typography variant="h6" align="center" style={{ marginTop: "20px" }}>
+          Loading resources...
+        </Typography>
+      )}
+
+      {/* Display generic error message if any */}
+      {error && (
+        <Typography color="error" variant="body1" align="center">
+          Something went wrong. Please try again.
+        </Typography>
+      )}
+
+      {/* Always display the DataGrid */}
+      <Box mt={4} display="flex" justifyContent="center">
+        <Box sx={{ width: "100%", maxWidth: "1200px" }}>
+          <DataGrid
+            rows={filteredRows}
+            columns={columns}
+            disableColumnMenu
+            autoHeight
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
+            loading={loading} // DataGrid shows built-in loading overlay
+            sx={{
+              "& .MuiDataGrid-cell": {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                whiteSpace: "normal",
+                wordBreak: "break-word",
+                lineHeight: "1.5",
+                maxHeight: "none !important",
+              },
+              // Ensure the virtual scroller doesn't restrict overflow
+              "& .MuiDataGrid-virtualScroller": {
+                overflow: "auto",
+              },
+            }}
+            // Custom overlay for no rows
+            components={{
+              NoRowsOverlay: () => (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Typography variant="body1" color="textSecondary">
+                    No resources found.
+                  </Typography>
+                </Box>
+              ),
+            }}
+          />
+        </Box>
       </Box>
 
       {/* Popover for More Details */}
