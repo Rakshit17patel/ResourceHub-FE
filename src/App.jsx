@@ -6,16 +6,17 @@ import { Header } from "./Components/Header";
 import { Footer } from "./Components/Footer";
 import { AppRouter } from "./Router";
 
+
 const clerkPublishableKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
 function App() {
   return (
     <ClerkProvider publishableKey={clerkPublishableKey}>
-      <BrowserRouter>
-        <Header />
-        <AppRouter />
-        <Footer />
-      </BrowserRouter>
+        <BrowserRouter>
+          <Header />
+          <AppRouter />
+          <Footer />
+        </BrowserRouter>
     </ClerkProvider>
   );
 }

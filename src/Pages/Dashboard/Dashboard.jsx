@@ -34,6 +34,7 @@ import { Link } from 'react-router-dom';
 const Dashboard = () => {
   const { user } = useUser();
   const { organization } = useOrganization();
+  console.log(organization);
 
   const quotes = [
     "The strength of the team is each individual member - Phil Jackson",
