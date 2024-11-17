@@ -57,18 +57,18 @@ const Resources = () => {
   const open = Boolean(anchorEl);
 
   const columns = [
-    { 
-      field: "ResourceID", 
-      headerName: "ID", 
-      width: 90, 
-      align: "center" // Centers cell content horizontally
+    {
+      field: "ResourceID",
+      headerName: "ID",
+      width: 90,
+      align: "center", // Centers cell content horizontally
     },
-    { 
-      field: "Name", 
-      headerName: "Name", 
-      width: 200, 
-      flex: 1, 
-      wrap: true, 
+    {
+      field: "Name",
+      headerName: "Name",
+      width: 200,
+      flex: 1,
+      wrap: true,
       align: "center", // Centers cell content horizontally
       renderCell: (params) => (
         <Box
@@ -85,10 +85,10 @@ const Resources = () => {
         </Box>
       ),
     },
-    { 
-      field: "Rate", 
-      headerName: "Rate", 
-      width: 180, 
+    {
+      field: "Rate",
+      headerName: "Rate",
+      width: 180,
       align: "center", // Centers cell content horizontally
       renderCell: (params) => (
         <Box
@@ -126,10 +126,10 @@ const Resources = () => {
         </Box>
       ),
     },
-    { 
-      field: "AvailableDate", 
-      headerName: "Available Date", 
-      width: 200, 
+    {
+      field: "AvailableDate",
+      headerName: "Available Date",
+      width: 200,
       align: "center", // Centers cell content horizontally
       renderCell: (params) => (
         <Box
@@ -307,7 +307,7 @@ const Resources = () => {
           </Button>
         </Grid>
       </Grid>
-      <Box mt={4}>
+      <Box mt={4} mb={8}>
         <DataGrid
           rows={filteredRows}
           columns={columns}
@@ -357,8 +357,14 @@ const Resources = () => {
                   <ListItemText
                     primary={<strong>{skill}</strong>}
                     secondary={`Level: ${level}`}
-                    primaryTypographyProps={{ variant: "subtitle1", align: "center" }}
-                    secondaryTypographyProps={{ color: "textSecondary", align: "center" }}
+                    primaryTypographyProps={{
+                      variant: "subtitle1",
+                      align: "center",
+                    }}
+                    secondaryTypographyProps={{
+                      color: "textSecondary",
+                      align: "center",
+                    }}
                   />
                 </ListItem>
               ))}
@@ -369,8 +375,14 @@ const Resources = () => {
                   <ListItemText
                     primary={<strong>{title}</strong>}
                     secondary={`Experience: ${years} years`}
-                    primaryTypographyProps={{ variant: "subtitle1", align: "center" }}
-                    secondaryTypographyProps={{ color: "textSecondary", align: "center" }}
+                    primaryTypographyProps={{
+                      variant: "subtitle1",
+                      align: "center",
+                    }}
+                    secondaryTypographyProps={{
+                      color: "textSecondary",
+                      align: "center",
+                    }}
                   />
                 </ListItem>
               ))}
