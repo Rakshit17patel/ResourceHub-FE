@@ -26,7 +26,7 @@ import debounce from "lodash.debounce"; // For debouncing search input
 const Resources = () => {
   // Retrieve organization information from Clerk
   const { organization } = useOrganization();
-  const orgId = organization?.id; // Use optional chaining to avoid errors if organization is undefined
+  const orgID = organization?.id; // Use optional chaining to avoid errors if organization is undefined
 
   // Data States
   const [data, setData] = useState([]);
@@ -74,7 +74,7 @@ const Resources = () => {
     try {
       setLoading(true);
       setError(null); // Reset previous errors
-      const resources = await resourcesAPI.getResources(orgId);
+      const resources = await resourcesAPI.getResources(orgID);
       setData(resources);
     } catch (err) {
       console.error("Error fetching resources:", err);
@@ -86,13 +86,13 @@ const Resources = () => {
 
   // useEffect to fetch data on component mount and when orgId changes
   useEffect(() => {
-    if (orgId) {
+    if (orgID) {
       fetchResources();
     } else {
       setLoading(false); // Stop loading if orgId is not available
       setError(new Error("Organization ID not found."));
     }
-  }, [orgId]);
+  }, [orgID]);
 
   // Handle Popover Open
   const handlePopoverOpen = (event, content, type) => {
@@ -399,7 +399,7 @@ const Resources = () => {
           />
         </Grid>
 
-        {/* Add New Resource Button */}
+        {/* ew Resource Button */}
         <Grid item xs={12} sm={12} md={4} style={{ textAlign: "center" }}>
           <Button
             size="medium"
