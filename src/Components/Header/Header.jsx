@@ -1,6 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Box, Button, IconButton } from '@mui/material';
-import { OrganizationSwitcher, useAuth } from '@clerk/clerk-react';
+import { OrganizationSwitcher, useAuth, useClerk } from '@clerk/clerk-react';
 import { UserButton } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,6 +10,7 @@ import { CONSTANTS } from '../../Theme/Constants';
 const Header = () => {
   const { isLoaded, isSignedIn } = useAuth();
   const { COLORS} = CONSTANTS;
+  const clerk = useClerk();
 
   if (!isLoaded) {
     return null; // Optionally render a loading spinner here
@@ -62,7 +63,7 @@ const Header = () => {
               <>
                 <Button 
                   component={Link} 
-                  to={PAGE_URLS.SIGN_IN} 
+                  onClick={()=>clerk.openSignIn()} 
                   sx={{
                     color: COLORS.WHITE,
                     backgroundColor: COLORS.MenuIcon,
@@ -76,21 +77,7 @@ const Header = () => {
                 >
                   Sign In
                 </Button>
-                {/* <Button 
-                  component={Link} 
-                  to={PAGE_URLS.SIGN_UP} 
-                  sx={{
-                    color: '#fff', 
-                    backgroundColor: '#333', // Dark color for Sign Up (close to black)
-                    borderRadius: '20px',
-                    padding: '5px 15px',
-                    '&:hover': {
-                      backgroundColor: '#1f1f1f', // Slightly darker on hover
-                    }
-                  }}
-                >
-                  Sign Up
-                </Button> */}
+                
               </>
             )}
           </Box>
