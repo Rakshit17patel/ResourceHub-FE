@@ -2,18 +2,18 @@
 
 import React, { useEffect, useState, useMemo } from "react";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import { DataGrid } from "@mui/x-data-grid";
 import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
   Grid,
   Paper,
+  TextField,
   Typography,
-  Popover,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
 } from "@mui/material";
 import resourcesAPI from "../../api/resources";
 import { useOrganization } from "@clerk/clerk-react";
@@ -33,10 +33,9 @@ const Resources = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [availableDateFilter, setAvailableDateFilter] = useState("");
 
-  // Popover States
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [popoverContent, setPopoverContent] = useState([]);
-  const [contentType, setContentType] = useState("");
+  // Modal States
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedResource, setSelectedResource] = useState(null);
 
   // Media Query for Responsive Design
   const isSmallScreen = useMediaQuery("(max-width:768px)");
@@ -79,46 +78,20 @@ const Resources = () => {
     }
   }, [orgID]);
 
-  // Handle Popover Open
-  const handlePopoverOpen = (event, content, type) => {
-    setAnchorEl(event.currentTarget);
-    setPopoverContent(content);
-    setContentType(type); // Set the type of content to display (Skills or Past Job Titles)
-  };
-
-  // Handle Popover Close
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-
   // Define Columns for DataGrid
   const columns = [
     {
       field: "ResourceID",
       headerName: "ID",
-      width: 90,
-      align: "center",
-      headerAlign: "center",
-    },
-    {
-      field: "Name",
-      headerName: "Name",
-      width: 200,
-      flex: 1,
-      wrap: true,
+      width: 90, // Fixed width for ID
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            justifyContent: "flex-end",
             padding: "0 8px",
-            textAlign: "center",
           }}
         >
           {params.value}
@@ -126,20 +99,18 @@ const Resources = () => {
       ),
     },
     {
-      field: "Rate",
-      headerName: "Rate",
-      width: 180,
-      align: "center",
-      headerAlign: "center",
+      field: "Name",
+      headerName: "Name",
+      width: 400, // Reduced width
+      flex: 0, // Prevents resizing based on flex
+      align: "left",
+      headerAlign: "left",
       renderCell: (params) => (
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            justifyContent: "flex-start",
             padding: "0 8px",
-            textAlign: "center",
           }}
         >
           {params.value}
@@ -149,19 +120,16 @@ const Resources = () => {
     {
       field: "Domain",
       headerName: "Domain",
-      width: 290,
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
+      width: 700, // Reduced width
+      flex: 0, // Prevents resizing based on flex
+      align: "left",
+      headerAlign: "left",
       renderCell: (params) => (
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            justifyContent: "flex-start",
             padding: "0 8px",
-            textAlign: "center",
           }}
         >
           {params.value.join(", ")}
@@ -171,66 +139,18 @@ const Resources = () => {
     {
       field: "AvailableDate",
       headerName: "Available Date",
-      width: 200,
+      width: 150,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
         <Box
           sx={{
             display: "flex",
-            alignItems: "center",
             justifyContent: "center",
-            height: "100%",
             padding: "0 8px",
-            textAlign: "center",
           }}
         >
           {params.value}
-        </Box>
-      ),
-    },
-    {
-      field: "Details",
-      headerName: "Details",
-      width: 240,
-      flex: 1,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            gap: 1, // Adds spacing between buttons
-            padding: "0 8px",
-          }}
-        >
-          <Button
-            size="small"
-            variant="contained"
-            onClick={(event) =>
-              handlePopoverOpen(event, params.row.Skills, "Skills")
-            }
-            aria-label="View Skills"
-          >
-            Skills
-          </Button>
-          <Button
-            size="small"
-            variant="contained"
-            onClick={(event) =>
-              handlePopoverOpen(
-                event,
-                params.row.PastJobTitles,
-                "Past Job Titles"
-              )
-            }
-            aria-label="View Past Job Titles"
-          >
-            Past Job Titles
-          </Button>
         </Box>
       ),
     },
@@ -298,37 +218,47 @@ const Resources = () => {
       }));
   }, [data, searchQuery, availableDateFilter]);
 
-  console.log(filteredRows);
+  // Handle row click to open modal
+  const handleRowClick = (params) => {
+    setSelectedResource(params.row);
+    setOpenModal(true);
+  };
+
+  // Handle modal close
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedResource(null);
+  };
 
   return (
     <Paper
       style={{
         padding: 16,
-        marginTop: 40, // Increased top margin for better spacing
-        marginBottom: 20,
-        maxWidth: isSmallScreen ? "95%" : "90%",
+        marginTop: 40,
+        marginBottom: 100,
+        maxWidth: "90%",
         marginLeft: "auto",
         marginRight: "auto",
       }}
-      elevation={3} // Adds a subtle shadow for depth
+      elevation={3}
     >
       <Typography variant="h6" gutterBottom align="center">
         Resource Data
       </Typography>
       <Grid container spacing={2} alignItems="center">
         {/* Search Filter */}
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Search"
             variant="outlined"
             fullWidth
             onChange={(e) => debouncedSetSearchQuery(e.target.value)}
-            placeholder="Search by name, domain, skills, etc."
+            placeholder="Search by name, domain, etc."
           />
         </Grid>
 
         {/* Date Filter */}
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={4}>
           <TextField
             label="Available Date From"
             type="date"
@@ -336,142 +266,258 @@ const Resources = () => {
             fullWidth
             value={availableDateFilter}
             onChange={(e) => setAvailableDateFilter(e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
+            InputLabelProps={{ shrink: true }}
           />
         </Grid>
 
-        {/* ew Resource Button */}
-        <Grid item xs={12} sm={12} md={4} style={{ textAlign: "center" }}>
+        {/* Add New Resource Button */}
+        {/* Add New Resource Button */}
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
           <Button
-            size="medium"
             variant="contained"
-            sx={{ marginBottom: "10px" }}
-            aria-label="Add New Resource"
+            color="primary"
+            onClick={() => alert("Add New Resource Clicked!")}
+            sx={{
+              height: "56px", // Aligns with the height of TextField
+              textTransform: "none",
+              fontSize: "1rem", // Increases font size slightly
+              padding: "10px 20px", // Adjust padding for better aesthetics
+            }}
           >
             Add New Resource
           </Button>
         </Grid>
       </Grid>
 
-      {/* Display loading indicator */}
+      {/* Display loading or error */}
       {loading && (
         <Typography variant="h6" align="center" style={{ marginTop: "20px" }}>
           Loading resources...
         </Typography>
       )}
-
-      {/* Display generic error message if any */}
       {error && (
         <Typography color="error" variant="body1" align="center">
           Something went wrong. Please try again.
         </Typography>
       )}
 
-      {/* Always display the DataGrid */}
-      <Box mt={4} display="flex" justifyContent="center">
-        <Box sx={{ width: "100%", maxWidth: "1200px" }}>
-          <DataGrid
-            rows={filteredRows}
-            columns={columns}
-            disableColumnMenu
-            autoHeight
-            pageSize={10}
-            rowsPerPageOptions={[10, 20, 50]}
-            loading={loading} // DataGrid shows built-in loading overlay
-            sx={{
-              "& .MuiDataGrid-cell": {
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                whiteSpace: "normal",
-                wordBreak: "break-word",
-                lineHeight: "1.5",
-                maxHeight: "none !important",
-              },
-              // Ensure the virtual scroller doesn't restrict overflow
-              "& .MuiDataGrid-virtualScroller": {
-                overflow: "auto",
-              },
-            }}
-            // Custom overlay for no rows
-            components={{
-              NoRowsOverlay: () => (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "100%",
-                  }}
-                >
-                  <Typography variant="body1" color="textSecondary">
-                    No resources found.
-                  </Typography>
-                </Box>
-              ),
-            }}
-          />
-        </Box>
+      {/* DataGrid for displaying data */}
+      <Box mt={4}>
+        <DataGrid
+          rows={filteredRows}
+          columns={columns}
+          disableColumnMenu
+          autoHeight
+          pageSize={10}
+          rowsPerPageOptions={[10, 20, 50]}
+          loading={loading}
+          onRowClick={handleRowClick}
+          sx={{
+            // Increase font size for table data
+            "& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaders": {
+              fontSize: "1rem", // Adjust font size
+              textAlign: "center", // Ensure consistent alignment
+              padding: "8px 16px", // Adjust cell padding
+            },
+            // Make column headers bold
+            // Make column header titles bold
+            "& .MuiDataGrid-columnHeaderTitle": {
+              fontWeight: "bold", // Ensures column header text is bold
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              paddingLeft: "8px",
+              paddingRight: "8px",
+            },
+            // Ensure table fits well for fewer columns
+            "& .MuiDataGrid-root": {
+              overflow: "hidden", // Avoid unnecessary scroll
+              maxWidth: "700px", // Adjust width
+              margin: "0 auto", // Center align table
+            },
+            // Adjust cell content alignment
+            "& .MuiDataGrid-cellContent": {
+              textAlign: "center", // Center text in cells
+            },
+          }}
+        />
       </Box>
 
-      {/* Popover for More Details */}
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <Paper style={{ padding: "16px", maxWidth: "300px" }}>
-          <List dense>
-            {contentType === "Skills" &&
-              popoverContent &&
-              Object.entries(popoverContent).map(([skill, { level }]) => (
-                <ListItem key={skill} disableGutters>
-                  <ListItemText
-                    primary={<strong>{skill}</strong>}
-                    secondary={`Level: ${level}`}
-                    primaryTypographyProps={{
-                      variant: "subtitle1",
-                      align: "center",
-                    }}
-                    secondaryTypographyProps={{
-                      color: "textSecondary",
-                      align: "center",
-                    }}
-                  />
-                </ListItem>
-              ))}
-            {contentType === "Past Job Titles" &&
-              popoverContent &&
-              Object.entries(popoverContent).map(([title, { years }]) => (
-                <ListItem key={title} disableGutters>
-                  <ListItemText
-                    primary={<strong>{title}</strong>}
-                    secondary={`Experience: ${years} years`}
-                    primaryTypographyProps={{
-                      variant: "subtitle1",
-                      align: "center",
-                    }}
-                    secondaryTypographyProps={{
-                      color: "textSecondary",
-                      align: "center",
-                    }}
-                  />
-                </ListItem>
-              ))}
-          </List>
-        </Paper>
-      </Popover>
+      {/* Modal for displaying resource details */}
+      {selectedResource && (
+        <Dialog
+          open={openModal}
+          onClose={handleCloseModal}
+          fullWidth
+          maxWidth="sm"
+          PaperProps={{
+            style: { borderRadius: "12px", padding: "16px" },
+          }}
+        >
+          <DialogTitle
+            sx={{
+              textAlign: "center",
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+              marginBottom: "16px",
+            }}
+          >
+            {selectedResource.Name}
+          </DialogTitle>
+          <DialogContent>
+            <Box
+              component="table"
+              sx={{
+                width: "100%",
+                borderCollapse: "collapse", // Removes table borders
+                "& td": { padding: "8px 0" }, // Adds spacing between rows
+              }}
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <Typography variant="body1">
+                      <strong>ID:</strong>
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body1">
+                      {selectedResource.ResourceID}
+                    </Typography>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body1">
+                      <strong>Rate:</strong>
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body1">
+                      ${selectedResource.Rate}
+                    </Typography>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body1">
+                      <strong>Domain:</strong>
+                    </Typography>
+                  </td>
+                  <td>
+                    <Typography variant="body1">
+                      {selectedResource.Domain.join(", ")}
+                    </Typography>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body1">
+                      <strong>Skills:</strong>
+                    </Typography>
+                  </td>
+                  <td>
+                    {Object.entries(selectedResource.Skills || {}).map(
+                      ([skill, details]) => (
+                        <Box
+                          key={skill}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          <Typography
+                            variant="body1"
+                            sx={{ fontWeight: "500", marginRight: "4px" }}
+                          >
+                            {skill}
+                          </Typography>
+                          <Box
+                            sx={{
+                              backgroundColor:
+                                details.level === "beginner"
+                                  ? "#ffcccb" // Light red for beginner
+                                  : details.level === "intermediate"
+                                  ? "#ffeb99" // Light yellow for intermediate
+                                  : "#c3f7c0", // Light green for expert
+                              color: "black",
+                              borderRadius: "8px",
+                              padding: "4px 8px",
+                              fontSize: "0.875rem",
+                              fontWeight: "500",
+                            }}
+                          >
+                            {details.level.charAt(0).toUpperCase() +
+                              details.level.slice(1)}
+                          </Box>
+                        </Box>
+                      )
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Typography variant="body1">
+                      <strong>Past Job Titles:</strong>
+                    </Typography>
+                  </td>
+                  <td>
+                    {Object.entries(selectedResource.PastJobTitles || {}).map(
+                      ([title, details]) => (
+                        <Box
+                          key={title}
+                          sx={{
+                            display: "inline-block",
+                            backgroundColor: "#fff3e0", // Light orange background
+                            padding: "8px 12px",
+                            borderRadius: "12px",
+                            margin: "4px",
+                            textAlign: "center",
+                            minWidth: "120px",
+                          }}
+                        >
+                          <Typography
+                            variant="body1"
+                            sx={{ fontWeight: "bold", fontSize: "1rem" }}
+                          >
+                            {title}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontSize: "0.875rem", color: "#555" }}
+                          >
+                            {details.years} years
+                          </Typography>
+                        </Box>
+                      )
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Box>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: "center", padding: "16px" }}>
+            <Button
+              onClick={handleCloseModal}
+              variant="contained"
+              color="primary"
+              sx={{
+                textTransform: "none",
+                padding: "8px 16px",
+                fontSize: "1rem",
+              }}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Paper>
   );
 };

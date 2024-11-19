@@ -84,14 +84,12 @@ const Projects = () => {
     fetchProjects();
   }, []);
 
-  // Handle Popover Open
   const handlePopoverOpen = (event, content, type) => {
     setAnchorEl(event.currentTarget);
     setPopoverContent(content);
     setContentType(type); // Set the type of content to display (RequiredResources)
   };
 
-  // Handle Popover Close
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
@@ -142,40 +140,19 @@ const Projects = () => {
 
   // Define Columns for DataGrid
   const columns = [
-    { 
-      field: "ProjectID", 
-      headerName: "ID", 
-      width: 90, 
+    {
+      field: "ProjectID",
+      headerName: "ID",
+      width: 90,
       align: "center",
       headerAlign: "center",
     },
-    { 
-      field: "ProjectName", 
-      headerName: "Project Name", 
-      width: 200, 
-      flex: 1, 
-      wrap: true, 
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
-            padding: "0 8px",
-            textAlign: "center",
-          }}
-        >
-          {params.value}
-        </Box>
-      ),
-    },
-    { 
-      field: "NumberOfDays", 
-      headerName: "Number of Days", 
-      width: 150, 
+    {
+      field: "ProjectName",
+      headerName: "Project Name",
+      width: 200,
+      flex: 1,
+      wrap: true,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -193,10 +170,31 @@ const Projects = () => {
         </Box>
       ),
     },
-    { 
-      field: "ProjectStartDate", 
-      headerName: "Start Date", 
-      width: 150, 
+    {
+      field: "NumberOfDays",
+      headerName: "Number of Days",
+      width: 150,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+            padding: "0 8px",
+            textAlign: "center",
+          }}
+        >
+          {params.value}
+        </Box>
+      ),
+    },
+    {
+      field: "ProjectStartDate",
+      headerName: "Start Date",
+      width: 150,
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
@@ -278,7 +276,11 @@ const Projects = () => {
             size="small"
             variant="contained"
             onClick={(event) =>
-              handlePopoverOpen(event, params.row.RequiredResources, "RequiredResources")
+              handlePopoverOpen(
+                event,
+                params.row.RequiredResources,
+                "RequiredResources"
+              )
             }
             aria-label="View Required Resources"
           >
@@ -313,11 +315,10 @@ const Projects = () => {
     if (row.RequiredResources && Array.isArray(row.RequiredResources)) {
       flatData +=
         " " +
-        row.RequiredResources
-          .map(
-            (resource) =>
-              `${resource.Role} ${Object.keys(resource.Skills).join(" ")}`
-          )
+        row.RequiredResources.map(
+          (resource) =>
+            `${resource.Role} ${Object.keys(resource.Skills).join(" ")}`
+        )
           .join(" ")
           .toLowerCase();
     }
@@ -411,7 +412,7 @@ const Projects = () => {
 
       {/* Display loading indicator */}
       {loading && (
-        <Typography variant="h6" align="center" style={{ marginTop: '20px' }}>
+        <Typography variant="h6" align="center" style={{ marginTop: "20px" }}>
           Loading projects...
         </Typography>
       )}
@@ -515,10 +516,18 @@ const Projects = () => {
           {/* Add more fields as necessary, such as Technology, Domain, Required Resources */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseModal} color="secondary" aria-label="Cancel Adding Project">
+          <Button
+            onClick={handleCloseModal}
+            color="secondary"
+            aria-label="Cancel Adding Project"
+          >
             Cancel
           </Button>
-          <Button onClick={handleFormSubmit} color="primary" aria-label="Confirm Adding Project">
+          <Button
+            onClick={handleFormSubmit}
+            color="primary"
+            aria-label="Confirm Adding Project"
+          >
             Add
           </Button>
         </DialogActions>
@@ -557,7 +566,10 @@ const Projects = () => {
                             <ListItem key={skill} disableGutters>
                               <ListItemText
                                 primary={`${skill} - Level: ${details.level}`}
-                                primaryTypographyProps={{ variant: "body2", align: "center" }} // Center text in popover
+                                primaryTypographyProps={{
+                                  variant: "body2",
+                                  align: "center",
+                                }} // Center text in popover
                               />
                             </ListItem>
                           )
