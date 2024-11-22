@@ -7,4 +7,18 @@ const getResources = async (orgID) => {
   return response.data;
 };
 
-export default { getResources };
+const postResource = async (orgID, resourceData) => {
+  try {
+    console.log(JSON.stringify(resourceData))
+    const response = await axiosInstance.post("/resources/",resourceData, {
+      params: { orgID },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting resource:", error);
+    throw error; 
+  }
+};
+
+
+export default { getResources,postResource };
