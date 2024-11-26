@@ -25,14 +25,14 @@ const AppRouter = () => {
         path={PAGE_URLS.HOME} 
         element={isSignedIn ? <Navigate to={PAGE_URLS.DASHBOARD} /> : <Home />} 
       />
-      <Route 
+      {/* <Route 
         path={PAGE_URLS.SIGN_IN} 
         element={isSignedIn ? <Navigate to={PAGE_URLS.DASHBOARD} /> : <SignInPage />} 
       />
       <Route 
         path={PAGE_URLS.SIGN_UP} 
         element={isSignedIn ? <Navigate to={PAGE_URLS.DASHBOARD} /> : <SignUpPage />} 
-      />
+      /> */}
 
       {/* Protected Routes */}
       <Route 
