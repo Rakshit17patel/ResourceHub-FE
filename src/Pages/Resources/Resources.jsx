@@ -17,12 +17,14 @@ import {
 } from "@mui/material";
 import resourcesAPI from "../../api/resources";
 import { useOrganization } from "@clerk/clerk-react";
+import {ResourceModal} from "../../Components/ResourceModal";
 import debounce from "lodash.debounce"; // For debouncing search input
 
 const Resources = () => {
   // Retrieve organization information from Clerk
   const { organization } = useOrganization();
   const orgID = organization?.id; // Use optional chaining to avoid errors if organization is undefined
+
 
   // Data States
   const [data, setData] = useState([]);
@@ -36,6 +38,15 @@ const Resources = () => {
   // Modal States
   const [openModal, setOpenModal] = useState(false);
   const [selectedResource, setSelectedResource] = useState(null);
+
+  const [openFormModal, setOpenFormModal] = useState(false);
+
+  // Handle form submission
+  const handleAddResource = (newResource) => {
+    console.log("New Resource Data:", newResource);
+    // Add logic to save the resource (e.g., API call)
+  };
+  
 
   // Media Query for Responsive Design
   const isSmallScreen = useMediaQuery("(max-width:768px)");
@@ -224,6 +235,12 @@ const Resources = () => {
     setOpenModal(true);
   };
 
+  const handleOpenModal = () => setOpenFormModal(true);
+  const handleCloseFormModal = () => {
+    setOpenFormModal(false);
+    fetchResources(); // Refresh data after modal submission
+  };
+
   // Handle modal close
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -269,8 +286,6 @@ const Resources = () => {
             InputLabelProps={{ shrink: true }}
           />
         </Grid>
-
-        {/* Add New Resource Button */}
         {/* Add New Resource Button */}
         <Grid
           item
@@ -281,7 +296,7 @@ const Resources = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => alert("Add New Resource Clicked!")}
+            onClick={handleOpenModal}
             sx={{
               height: "56px", // Aligns with the height of TextField
               textTransform: "none",
@@ -518,6 +533,11 @@ const Resources = () => {
           </DialogActions>
         </Dialog>
       )}
+      <ResourceModal
+      open={openFormModal}
+      onClose={handleCloseFormModal} // Refresh data on close
+      orgID={orgID} // Pass organization ID
+    />
     </Paper>
   );
 };
